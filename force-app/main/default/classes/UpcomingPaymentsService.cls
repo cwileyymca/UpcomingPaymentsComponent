@@ -40,7 +40,7 @@ public with sharing class UpcomingPaymentsService {
     /** Represents a discount applied to a fee item. */
     public class DiscountItem {
         @AuraEnabled public String  name;
-        @AuraEnabled public Decimal amount;               // positive value for display
+        @AuraEnabled public Decimal amount;              
         @AuraEnabled public Id     discountScheduleId;
         @AuraEnabled public Id     parentFeeScheduleId;
         @AuraEnabled public String tliDescription;
@@ -67,7 +67,7 @@ public with sharing class UpcomingPaymentsService {
         @AuraEnabled public PaymentMethodInfo   paymentMethod;
         @AuraEnabled public String              tliDescription;
         @AuraEnabled public List<SectionItem>   items;
-        @AuraEnabled public List<DiscountItem>  miscDiscounts; // discounts without a fee match
+        @AuraEnabled public List<DiscountItem>  miscDiscounts; 
     }
 
     // ---------------------------
@@ -414,7 +414,7 @@ public with sharing class UpcomingPaymentsService {
             monthlyDay,
             startDate,
             bs.TREX1__Last_Date_Billed__c,
-            endDate,                     // <-- pass End Date
+            endDate,                     
             today
         );
         return cand; // (cand may be null if beyond end window)

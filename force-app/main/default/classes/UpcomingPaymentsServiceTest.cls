@@ -146,8 +146,8 @@ private class UpcomingPaymentsServiceTest {
             TREX1__Billing_Event_Count__c = 0,
             TREX1__Number_Of_Terms__c = null,
             TREX1__Term_Type__c = 'Monthly',
-            TREX1__Start_Date__c = today.addMonths(-1), // start prior to current month
-            TREX1__Last_Date_Billed__c = null,          // not billed yet this month
+            TREX1__Start_Date__c = today.addMonths(-1), 
+            TREX1__Last_Date_Billed__c = null,          
             TREX1__Amount__c = 50,
             TREX1__Billing_Schedule_Group__c = bsg1.Id,
             TREX1__Transaction_Line_Item__c = tliFee.Id,
@@ -179,7 +179,7 @@ private class UpcomingPaymentsServiceTest {
             TREX1__Billing_Event_Count__c = 0,
             TREX1__Number_Of_Terms__c = 1,
             TREX1__Term_Type__c = 'One Time',
-            TREX1__Start_Date__c = expectedNext, // <-- crucial: matches sectionNext so it appears
+            TREX1__Start_Date__c = expectedNext, 
             TREX1__End_Date__c = expectedNext,
             TREX1__Amount__c = -5,
             TREX1__Billing_Schedule_Group__c = bsg1.Id,
@@ -244,7 +244,7 @@ private class UpcomingPaymentsServiceTest {
             TREX1__Amount__c = 15,
             TREX1__Billing_Schedule_Group__c = bsg2.Id,
             TREX1__Transaction_Line_Item__c = tliFee.Id,
-            TREX1__TP2StoredAccount__c = saHousehold.Id // alias → BILL_TO_ACCOUNT branch
+            TREX1__TP2StoredAccount__c = saHousehold.Id 
         );
         insert bsHouseholdAliasBillTo;
     }

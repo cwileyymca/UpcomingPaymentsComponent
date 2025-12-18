@@ -66,7 +66,7 @@ export default class UpcomingPayments extends NavigationMixin(LightningElement) 
         description: fee.tliDescription || fee.feeName || '—',
         type: 'Fee',
         amount: fee.feeAmount,
-        recordId: fee.feeScheduleId // <-- NEW (record to open)
+        recordId: fee.feeScheduleId 
       });
       // Discounts linked to this fee
       (fee.discounts || []).forEach((disc) => {
@@ -75,7 +75,7 @@ export default class UpcomingPayments extends NavigationMixin(LightningElement) 
           description: disc.tliDescription || disc.name || '—',
           type: 'Discount',
           amount: `-${disc.amount}`,
-          recordId: disc.discountScheduleId // <-- NEW
+          recordId: disc.discountScheduleId 
         });
       });
     });
@@ -86,7 +86,7 @@ export default class UpcomingPayments extends NavigationMixin(LightningElement) 
         description: disc.tliDescription || disc.name || '—',
         type: 'Discount',
         amount: `-${disc.amount}`,
-        recordId: disc.discountScheduleId // <-- NEW
+        recordId: disc.discountScheduleId 
       });
     });
     return rows;
@@ -166,7 +166,7 @@ export default class UpcomingPayments extends NavigationMixin(LightningElement) 
             amount: this.formatDiscount(d.amount), // positive coming from Apex; we format and add minus where shown
             discountScheduleId: d.discountScheduleId,
             parentFeeScheduleId: d.parentFeeScheduleId,
-            tliDescription: d.tliDescription // <— NEW
+            tliDescription: d.tliDescription 
         }));
     }
 
