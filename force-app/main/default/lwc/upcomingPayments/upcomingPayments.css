@@ -1,0 +1,199 @@
+/**
+ * =============================================================================
+ *  File:         accountHouseholdRoster.css
+ *  Component:    AccountHouseholdRoster (LWC) — Styles
+ *  Project:      YMCA of San Francisco (YGSF)
+ *  Purpose:      Compact, readable styles for the Upcoming Payments / Roster UI.
+ *                Consolidated and de-duplicated from working drafts; comments
+ *                explain intent without dev-process noise.
+ *
+ *  Author:       Colby Wiley
+ *  Created:      2025-11-02
+ *  Last Updated: 2025-11-02
+ *
+ *  Notes:
+ *    - LWC CSS is scoped to the component shadow DOM automatically.
+ *    - Uses SLDS utility classes where appropriate; custom rules align spacing,
+ *      grid layout, and table column widths for a compact presentation.
+ * =============================================================================
+ */
+
+/* ------------------------------
+ * Card & basic layout
+ * ------------------------------ */
+.container {
+  border: 1px solid #e5e5e5;
+  border-radius: 0.25rem;
+  padding: 0.5rem 0.5rem 0.35rem; /* compact card spacing */
+  background: #ffffff;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.25rem 0;
+}
+
+.label {
+  color: #706e6b;
+  font-size: 0.75rem;
+  margin-right: 0.5rem;
+}
+
+.value {
+  font-weight: 600;
+}
+
+/* ------------------------------
+ * Next payment banner
+ * ------------------------------ */
+.nextPayment {
+  background: #e8f5e9;           /* light green */
+  border: 1px solid #c8e6c9;
+  border-radius: 0.25rem;
+  padding: 0.5rem;               /* compact */
+  text-align: center;
+}
+
+.nextLabel {
+  color: #2e7d32;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.amount {
+  font-size: 1.5rem;             /* largest text in component */
+  font-weight: 800;
+  color: #1b5e20;
+  margin: 0.25rem 0;
+}
+
+.onDate {
+  color: #2e7d32;
+  font-size: 0.85rem;
+}
+
+/* ------------------------------
+ * Pagination & alignment helpers
+ * ------------------------------ */
+.slds-text-align_center { text-align: center; }
+
+.pagination .page-info {
+  min-width: 8rem;
+  text-align: center;
+}
+
+.pagination .slds-button { min-width: 5rem; }
+
+.totalsRow .label { margin-right: 0.25rem; }
+
+/* ------------------------------
+ * Key/Value grids (left column)
+ * ------------------------------ */
+
+/* 4-column grid; collapses to 2 columns on smaller widths */
+.kvGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem 1rem;              /* row / col gap */
+}
+
+.kvItem { padding: 0.25rem 0; }
+
+.kvLabel {
+  color: #706e6b;
+  font-size: 0.65rem;            /* tighter */
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.05rem;
+}
+
+.kvValue { font-weight: 500; }   /* moderate weight for readability */
+
+/* When showing Bill-to-Account, span all columns */
+.kvSpanAll { grid-column: 1 / -1; }
+
+@media (max-width: 48rem) {
+  .kvGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Nickname banner: prominent but compact */
+.nicknameBanner {
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 1.15;
+  margin-bottom: 0.15rem;
+  word-break: break-word;
+}
+
+/* Three-tile grid for Card Type / Ending With / Expiration */
+.kvGrid3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem 1rem;
+}
+
+@media (max-width: 48rem) {
+  .kvGrid3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ------------------------------
+ * Description & info styling
+ * ------------------------------ */
+
+/* Top-level TLI description (compact, divider above) */
+.tliDescription {
+  margin-top: 0.2rem;
+  padding-top: 0.2rem;
+  border-top: 1px solid #eee;
+  font-size: 0.78rem;
+  color: #3e3e3c;
+}
+
+.info-icon {
+  cursor: pointer;
+  vertical-align: middle;
+  margin-left: 0.25rem;
+}
+
+/* ------------------------------
+ * Accordion compaction
+ * ------------------------------ */
+.accordionTight .slds-accordion__list-item { margin: 0; }
+.accordionTight .slds-accordion__section   { border-top: 0; }
+.accordionTight .slds-accordion__summary   { padding: 0.2rem 0; }
+.accordionTight .slds-accordion__summary-action {
+  padding: 0.2rem 0;
+  min-height: unset;
+}
+.accordionTight .slds-accordion__summary-content {
+  font-size: 0.8rem;
+  line-height: 1.1;
+}
+.accordionTight .slds-accordion__content { padding: 0.25rem 0 0.2rem; }
+
+/* ------------------------------
+ * Table column sizing & cell wrap
+ * ------------------------------ */
+.col-type   { width: 7.5rem; }   /* fixed, smaller */
+.col-amount { width: 9.5rem; }   /* fixed, smaller */
+.col-desc   { width: auto; }     /* flex remainder */
+
+.cell-wrap {
+  white-space: normal;           /* allow wrapping */
+  word-break: break-word;        /* wrap long tokens */
+  overflow-wrap: anywhere;       /* extra safety */
+  line-height: 1.2;              /* tighter rows */
+}
+.cell-link {
+  text-decoration: underline;
+  cursor: pointer;
+  color: #0176d3;                /* SLDS brand blue */
+  white-space: normal;           /* allow wrapping */
+  word-break: break-word;        /* wrap long words */
+  overflow-wrap: anywhere;       /* ensure long tokens break */
+  line-height: 1.2;              /* keep rows compact */
+  display: inline-block;         /* makes wrapping work consistently */
+}

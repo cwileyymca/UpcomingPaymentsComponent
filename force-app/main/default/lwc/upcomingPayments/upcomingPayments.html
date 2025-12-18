@@ -1,0 +1,205 @@
+<template>
+    <!-- Loading -->
+    <template if:true={loading}>
+        <lightning-card title="Upcoming Payments">
+            <div class="slds-p-around_x-small slds-text-align_center">
+                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+            </div>
+        </lightning-card>
+    </template>
+
+    <!-- Error -->
+    <template if:true={error}>
+        <lightning-card title="Upcoming Payments">
+            <div class="slds-p-around_x-small slds-text-color_error">
+                {error}
+            </div>
+        </lightning-card>
+    </template>
+
+    <!-- Has Data -->
+    <template if:true={hasData}>
+        <lightning-card title="Upcoming Payments">
+            <!-- Tighter outer padding + gutters -->
+            <div class="slds-p-around_x-small slds-grid slds-wrap slds-gutters_x-small">
+
+                <!-- Page content (3 per page) -->
+                <template for:each={displayedGroups} for:item="g" for:index="index">
+                    <div key={g.id} class="slds-col slds-size_1-of-1 slds-p-vertical_x-small" data-group-index={index}>
+                        <div class="container">
+                            <!-- Top row: left (method/desc/discounts) + right (next payment) -->
+                            <div class="slds-grid slds-gutters_x-small slds-wrap">
+                                <!-- Left: payment method + description + misc discounts -->
+                                <div class="slds-col slds-size_2-of-3">
+                                    <!-- Bill-to-Account: simple single row -->
+                                    <template if:true={g.paymentMethod.label}>
+                                        <div class="kvItem kvSpanAll">
+                                            <div class="kvLabel">Payment Method</div>
+                                            <div class="kvValue">{g.paymentMethod.label}</div>
+                                        </div>
+                                    </template>
+
+                                    <!-- Stored Account: nickname banner + 3-column grid -->
+                                    <template if:false={g.paymentMethod.label}>
+                                        <template if:true={g.paymentMethod.nickname}>
+                                            <div class="nicknameBanner" title="Payment method nickname">
+                                                {g.paymentMethod.nickname}
+                                            </div>
+                                        </template>
+
+                                        <div class="kvGrid3">
+                                            <template if:true={g.paymentMethod.cardType}>
+                                                <div class="kvItem">
+                                                    <div class="kvLabel">Card Type</div>
+                                                    <div class="kvValue">{g.paymentMethod.cardType}</div>
+                                                </div>
+                                            </template>
+
+                                            <template if:true={g.paymentMethod.endingIn}>
+                                                <div class="kvItem">
+                                                    <div class="kvLabel">Ending With</div>
+                                                    <div class="kvValue">{g.paymentMethod.endingIn}</div>
+                                                </div>
+                                            </template>
+
+                                            <template if:true={g.paymentMethod.expiration}>
+                                                <div class="kvItem">
+                                                    <div class="kvLabel">Expiration</div>
+                                                    <div class="kvValue">{g.paymentMethod.expiration}</div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+
+                                    <!-- TLI Description (smaller & tighter) -->
+                                    <template if:true={g.tliDescription}>
+                                        <div class="tliDescription slds-m-top_xx-small">
+                                            {g.tliDescription}
+                                        </div>
+                                    </template>
+
+                                    <!-- Misc discounts (no linked fee in this section) -->
+                                    <template if:true={g.miscDiscounts}>
+                                        <div class="slds-m-top_xx-small slds-m-left_small">
+                                            <template for:each={g.miscDiscounts} for:item="disc">
+                                                <div key={disc.discountScheduleId} class="row">
+                                                    <span class="label">Discount - {disc.name}</span>
+                                                    <span class="value">-{disc.amount}</span>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                </div>
+
+                                <!-- Right: Next Payment -->
+                                <div class="slds-col slds-size_1-of-3">
+                                    <div class="nextPayment">
+                                        <div class="nextLabel">Next Payment</div>
+                                        <div class="amount">{g.netTotal}</div>
+                                        <div class="onDate">on {g.nextDate}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Details accordion (compact, inside the same card) -->
+                            <div class="accordionTight slds-m-top_x-small">
+                                <lightning-accordion
+                                    allow-multiple-sections-open
+                                    onsectiontoggle={handleAccordionToggle}
+                                    active-section-name={activeSectionNames}
+                                >
+                                    <lightning-accordion-section name={g.id} label={g.accordionLabel}>
+                                        <div class="slds-table_resizable-cols">
+                                            <table class="slds-table slds-table_bordered slds-table_fixed-layout slds-table_compact">
+                                                <!-- Make Description wide + wrap; Type/Amount fixed -->
+                                                <colgroup>
+                                                    <col class="col-desc" />
+                                                    <col class="col-type" />
+                                                    <col class="col-amount" />
+                                                </colgroup>
+                                                <thead>
+                                                    <tr class="slds-line-height_reset">
+                                                        <th scope="col">
+                                                            <div class="slds-truncate" title="Description">Description</div>
+                                                        </th>
+                                                        <th scope="col">
+                                                            <div class="slds-truncate" title="Type">Type</div>
+                                                        </th>
+                                                        <th scope="col" style="text-align: right;">
+                                                            <div class="slds-truncate" title="Amount">Amount</div>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <template for:each={g.detailRows} for:item="row">
+                                                        <tr key={row.id}>
+                                                            <td>
+  <template if:true={row.recordId}>
+    <a
+      href="javascript:void(0);"
+      class="cell-link"
+      data-record-id={row.recordId}
+      onclick={handleRowLinkClick}
+      title={row.description}
+    >
+      {row.description}
+    </a>
+  </template>
+  <template if:false={row.recordId}>
+    <div class="cell-wrap" title={row.description}>{row.description}</div>
+  </template>
+</td>
+
+                                                            <td>
+                                                                <div class="slds-truncate" title={row.type}>{row.type}</div>
+                                                            </td>
+                                                            <td style="text-align:right;">
+                                                                <div class="slds-truncate" title={row.amount}>{row.amount}</div>
+                                                            </td>
+                                                        </tr>
+                                                    </template>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </lightning-accordion-section>
+                                </lightning-accordion>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Pagination controls -->
+                <template if:true={hasPagination}>
+                    <div class="slds-size_1-of-1">
+                        <div class="pagination slds-m-top_x-small slds-grid slds-grid_align-spread slds-align_absolute-center">
+                            <div class="pagination-left">
+                                <lightning-button label="First" onclick={handleFirst} disabled={disablePrev}></lightning-button>
+                                <lightning-button label="Prev" onclick={handlePrev} disabled={disablePrev} class="slds-m-left_x-small"></lightning-button>
+                            </div>
+
+                            <div class="page-info slds-text-body_small slds-text-title_caps">
+                                Page {currentPage} of {totalPages}
+                            </div>
+
+                            <div class="pagination-right">
+                                <lightning-button label="Next" onclick={handleNext} disabled={disableNext}></lightning-button>
+                                <lightning-button label="Last" onclick={handleLast} disabled={disableNext} class="slds-m-left_x-small"></lightning-button>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </lightning-card>
+    </template>
+
+    <!-- No Data -->
+    <template if:false={hasData}>
+        <template if:false={loading}>
+            <lightning-card title="Upcoming Payments">
+                <div class="slds-p-around_x-small slds-text-align_center slds-text-color_weak">
+                    No billable billing schedule groups found.
+                </div>
+            </lightning-card>
+        </template>
+    </template>
+</template>
